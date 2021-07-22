@@ -1,7 +1,9 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
-require('dotenv').config()
+const auth = require('./Routes/auth');
+const login = require('./Routes/authLogin');
+require('dotenv').config();
 
 const app = express();
 
@@ -9,25 +11,27 @@ const app = express();
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
 
-
 // Conexión a Base de datos
 const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.l93jg.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
 console.log(uri);
-mongoose.connect(uri,
-    { useNewUrlParser: true, useUnifiedTopology: true }
-).then(() => console.log('Base de datos conectada')).catch(e => console.log('error db:', e))
+mongoose
+  .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log('Base de datos conectada'))
+  .catch((e) => console.log('error db:', e));
 // import routes
-
+app.use('/api/auth', auth);
+app.use('/api/login', login);
 // route middlewares
+
 app.get('/', (req, res) => {
-    res.json({
-        estado: true,
-        mensaje: 'funciona!'
-    })
+  res.json({
+    estado: true,
+    mensaje: 'funciona!',
+  });
 });
 
 // iniciar server
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
-    console.log(`servidor andando en: ${PORT}`)
-})
+  console.log(`servidor andando en: ${PORT}`);
+});
