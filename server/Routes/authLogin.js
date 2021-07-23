@@ -2,8 +2,9 @@ const jwt = require('jsonwebtoken');
 const router = require('express').Router();
 const User = require('../Schemas/user');
 const bcrypt = require('bcrypt');
-router.post('/', async (req, res) => {
+router.get('/', async (req, res) => {
   // validaciones
+  console.log(req);
   const user = await User.findOne({ email: req.body.email });
   if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
   const validPassword = await bcrypt.compare(req.body.password, user.password);
@@ -24,10 +25,12 @@ router.post('/', async (req, res) => {
     data: { token },
   });
 });
-router.get('/', (req, res) => {
+
+router.post('/', (req, res) => {
   res.json({
     estado: true,
     mensaje: 'funciona!',
   });
 });
+
 module.exports = router;
