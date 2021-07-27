@@ -1,8 +1,10 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
+var cors = require('cors');
 const auth = require('./Routes/auth');
 const login = require('./Routes/authLogin');
+
 require('dotenv').config();
 
 const app = express();
@@ -10,7 +12,7 @@ const app = express();
 // capturar body
 app.use(bodyparser.urlencoded({ extended: false }));
 app.use(bodyparser.json());
-
+app.use(cors());
 // Conexión a Base de datos
 const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.l93jg.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
 console.log(uri);
