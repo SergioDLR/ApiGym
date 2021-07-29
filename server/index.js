@@ -4,6 +4,8 @@ const bodyparser = require('body-parser');
 var cors = require('cors');
 const auth = require('./Routes/auth');
 const login = require('./Routes/authLogin');
+const validateToken = require('./Routes/validateToken');
+const user = require('./Routes/user');
 
 require('dotenv').config();
 
@@ -23,6 +25,7 @@ mongoose
 // import routes
 app.use('/api/auth', auth);
 app.use('/api/login', login);
+app.use('/api/user', validateToken, user);
 // route middlewares
 
 app.get('/', (req, res) => {
