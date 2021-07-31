@@ -6,6 +6,7 @@ const auth = require('./Routes/auth');
 const login = require('./Routes/authLogin');
 const validateToken = require('./Routes/validateToken');
 const user = require('./Routes/user');
+const routines = require('./Routes/routines');
 
 require('dotenv').config();
 
@@ -26,6 +27,7 @@ mongoose
 app.use('/api/auth', auth);
 app.use('/api/login', login);
 app.use('/api/user', validateToken, user);
+app.use('/api/routines', validateToken, routines);
 // route middlewares
 
 app.get('/', (req, res) => {
