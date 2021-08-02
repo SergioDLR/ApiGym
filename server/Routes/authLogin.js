@@ -4,7 +4,6 @@ const User = require('../Schemas/user');
 const bcrypt = require('bcrypt');
 router.post('/', async (req, res) => {
   // validaciones
-  console.log(req.body);
   const user = await User.findOne({ email: req.body.email });
   if (!user) return res.status(400).json({ error: 'Usuario no encontrado' });
   const validPassword = await bcrypt.compare(req.body.password, user.password);

@@ -3,9 +3,21 @@ const Routine = require('../Schemas/routine');
 const jwt = require('jsonwebtoken');
 router.post('/', async (req, res) => {
   try {
-    const rotineReq = new Routine(req.body.routine);
-    const savedRoutine = await rotineReq.save();
-    res.status(200).json(savedRoutine).end();
+    Routine.find({ name: req.body.name }, function (error, result) {
+      if (result.length > 0) {
+        res
+          .status(400)
+          .json({ error: 'Ya tienes una rutina con ese nombre' })
+          .end();
+      } else {
+        const rotineReq = new Routine({
+          name: req.body.name,
+          userId: req.user.id,
+        });
+        rotineReq.save();
+        res.status(200).json('Rutina guardada').end();
+      }
+    });
   } catch {
     console.log('ocurrio un error');
     res.status(400).json({ error: 'Faltan parametros en la query' }).end();
@@ -13,7 +25,6 @@ router.post('/', async (req, res) => {
 });
 
 router.get('/', (req, res) => {
-  console.log(req.user);
   const id = req.user.id;
   const result = Routine.find(
     {
