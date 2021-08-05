@@ -7,6 +7,7 @@ const login = require('./Routes/authLogin');
 const validateToken = require('./Routes/validateToken');
 const user = require('./Routes/user');
 const routines = require('./Routes/routines');
+const routineDay = require('./Routes/routineDay');
 
 require('dotenv').config();
 
@@ -18,7 +19,6 @@ app.use(bodyparser.json());
 app.use(cors());
 // Conexión a Base de datos
 const uri = `mongodb+srv://${process.env.USER}:${process.env.PASSWORD}@cluster0.l93jg.mongodb.net/${process.env.DBNAME}?retryWrites=true&w=majority`;
-console.log(uri);
 mongoose
   .connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
   .then(() => console.log('Base de datos conectada'))
@@ -28,6 +28,7 @@ app.use('/api/auth', auth);
 app.use('/api/login', login);
 app.use('/api/user', validateToken, user);
 app.use('/api/routines', validateToken, routines);
+app.use('/api/routinesDay', validateToken, routineDay);
 // route middlewares
 
 app.get('/', (req, res) => {
