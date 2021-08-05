@@ -1,6 +1,8 @@
 const router = require('express').Router();
 const Routine = require('../Schemas/routine');
+const TrainingRoutine = require('../Schemas/traininigRoutine');
 const jwt = require('jsonwebtoken');
+
 router.post('/', async (req, res) => {
   try {
     Routine.find({ name: req.body.name }, function (error, result) {
@@ -42,4 +44,31 @@ router.get('/', (req, res) => {
     }
   );
 });
+router.delete('/:id', async (req, res) => {
+  try {
+    const id = req.params.id;
+    const encontrada = await Routine.findOne({ _id: id });
+    if (!encontrada) {
+      return res
+        .status(202)
+        .json({ mensaje: 'no se encontro la rutina a borrar' });
+    } else {
+      encontrada.entrenamientoDias.forEach((e) => {
+        const borrarDia = TrainingRoutine.deleteOne(
+          { _id: e },
+          function (result, error) {
+            //console.log(error);
+          }
+        );
+      });
+      encontrada.delete();
+    }
+
+    res.status(200).json({ mensaje: 'Rutina borrada con exito' });
+  } catch (error) {
+    console.log(error);
+    res.status(400).json({ mensaje: 'hay un error en la query' });
+  }
+});
+
 module.exports = router;
