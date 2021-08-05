@@ -5,6 +5,8 @@ const jwt = require('jsonwebtoken');
 
 router.post('/', async (req, res) => {
   try {
+    const nombreRutina = req.body.name;
+    const idUsuario = req.user.id;
     Routine.find({ name: req.body.name }, function (error, result) {
       if (result.length > 0) {
         res
@@ -13,14 +15,14 @@ router.post('/', async (req, res) => {
           .end();
       } else {
         const rotineReq = new Routine({
-          name: req.body.name,
-          userId: req.user.id,
+          name: nombreRutina,
+          userId: idUsuario,
         });
         rotineReq.save();
         res.status(200).json('Rutina guardada').end();
       }
     });
-  } catch {
+  } catch (error) {
     console.log('ocurrio un error');
     res.status(400).json({ error: 'Faltan parametros en la query' }).end();
   }
