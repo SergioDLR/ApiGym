@@ -22,7 +22,7 @@ router.post('/:id', async (req, res) => {
       { _id: id },
       { $inc: { cantidadDias: 1 }, $push: { entrenamientoDias: savedDay._id } },
       { new: true, useFindAndModify: false }
-    );
+    ).populate('entrenamientoDias');
 
     res.status(200).json({
       rutinaGuardada: rutinaAgregarDia,
