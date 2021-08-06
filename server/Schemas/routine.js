@@ -5,6 +5,6 @@ const routineSchema = mongoose.Schema({
   name: { type: String, required: true },
   userId: { type: ObjectId, required: true },
   cantidadDias: { type: Number, default: 0 },
-  entrenamientoDias: [{ type: ObjectId }],
+  entrenamientoDias: [{ type: ObjectId, ref: 'TrainingRoutine' }],
 });
 module.exports = mongoose.model('Routine', routineSchema);

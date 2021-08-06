@@ -28,23 +28,20 @@ router.post('/', async (req, res) => {
   }
 });
 
-router.get('/', (req, res) => {
+router.get('/', async (req, res) => {
   const id = req.user.id;
-  const result = Routine.find(
-    {
-      userId: id,
-    },
-    function (error, result) {
-      if (result.length > 0) {
-        res.status(200).json(result).end();
-      } else {
-        res
-          .status(400)
-          .json({ error: 'No hay routinas para ese usuario' })
-          .end();
-      }
-    }
-  );
+  const resultado = await Routine.find({
+    userId: id,
+  }).populate('entrenamientoDias');
+
+  if (resultado.length > 0) {
+    res.status(200).json(resultado).end();
+  } else {
+    res
+      .status(404)
+      .json({ error: 'No se encontraron rutinas para este usuario' })
+      .end();
+  }
 });
 router.delete('/:id', async (req, res) => {
   try {
