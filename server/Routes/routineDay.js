@@ -61,7 +61,8 @@ router.put("/:id", async (req, res) => {
 router.delete("/ejercicio/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    const ejercicioAEliminar = req.body.ejercicio;
+    const ejercicioAEliminar = req.body;
+
     const diaDeEjercicio = await TrainingRoutine.findOneAndUpdate(
       { _id: id },
       { $pull: { ejercicios: ejercicioAEliminar } },
@@ -70,12 +71,16 @@ router.delete("/ejercicio/:id", async (req, res) => {
     if (!diaDeEjercicio) {
       return res.status(202).json("No se encontro el dia de rutina");
     }
-
+    const rutinaFind = await Routine.findOne({
+      _id: diaDeEjercicio.routineId,
+    }).populate("entrenamientoDias");
     res.status(200).json({
-      rutinaNueva: diaRutinaEjercicioAgregado,
-      mensaje: "Se agrego correctamente",
+      rutinaNueva: diaDeEjercicio,
+      rutinaSeleccionada: rutinaFind,
+      mensaje: "Se elimino correctamente",
     });
   } catch (error) {
+    console.log(error);
     res.status(400).json({ mensaje: "Hay algun error con la query" });
   }
 });
