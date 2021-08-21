@@ -13,7 +13,7 @@ router.post("/", async (req, res) => {
       routineId: rutinaId,
       ejerciciosRealizados: ejercicios,
       userId: idUsuario,
-      tiempo: time,
+      tiempo: time
     });
     createTraining.save();
     res
@@ -28,16 +28,24 @@ router.post("/", async (req, res) => {
 router.get("/", async (req, res) => {
   try {
     const idUsuario = req.user.id;
-    const resultadoBusqueda = await Training.find({ userId: idUsuario });
+    const resultadoBusqueda = await Training.find({
+      userId: idUsuario
+    }).populate({
+      path: "routineId",
+      populate: {
+        path: "entrenamientoDias"
+      }
+    });
+
     if (resultadoBusqueda.length > 0) {
       res.status(200).json({
         mensaje: "Entrenamiento encontrados",
-        result: resultadoBusqueda,
+        result: resultadoBusqueda
       });
     } else {
       res.status(400).json({
         mensaje: "Este usuario no tiene entrenamientos",
-        result: resultadoBusqueda,
+        result: resultadoBusqueda
       });
     }
   } catch (error) {
@@ -52,17 +60,17 @@ router.get("/rutina/:id", async (req, res) => {
     const idUsuario = req.user.id;
     const resultadoBusqueda = await Training.find({
       userId: idUsuario,
-      routineId: idRutina,
-    });
+      routineId: idRutina
+    }).populate("routineId");
     if (resultadoBusqueda.length > 0) {
       res.status(200).json({
         mensaje: "Entrenamiento encontrados",
-        result: resultadoBusqueda,
+        result: resultadoBusqueda
       });
     } else {
       res.status(400).json({
         mensaje: "Esta rutina no tiene entrenamientos",
-        result: resultadoBusqueda,
+        result: resultadoBusqueda
       });
     }
   } catch (error) {
